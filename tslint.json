@@ -155,7 +155,7 @@
     "restrict-plus-operands": true,
     "return-undefined": true,
     "static-this": true,
-    "strict-boolean-expressions": [true, "allow-null-union", "allow-undefined-union", "allow-boolean-or-undefined"],
+    "strict-boolean-expressions": [true, "allow-null-union", "allow-undefined-union", "allow-boolean-or-undefined", "ignore-rhs"],
     "strict-type-predicates": true,
     "switch-default": false,
     "switch-final-break": false,
