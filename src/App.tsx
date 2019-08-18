@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import {CSSReset} from './lib/core/css_reset';
 import {Wizz} from './lib/core/wizz';
 
-const WithTodoList = Wizz<string[]>([]);
+const WithTodoList = Wizz<string[]>();
 
 function addRandomTodo(): void {
   let currentTodoList = WithTodoList.getState();
@@ -21,19 +22,25 @@ function addRandomTodo(): void {
 
 export const App: React.FC = () => {
   return (
-    <WithTodoList>
-      {todoList => (
-        <AppWrapper>
-          <TodoListTitle>TODO list</TodoListTitle>
-          {todoList.map((todo, index) => (
-            <div key={index}>{todo}</div>
-          ))}
-          <RandomTodoButton onClick={addRandomTodo}>Add random</RandomTodoButton>
-        </AppWrapper>
-      )}
-    </WithTodoList>
+    <React.Fragment>
+      <CSSReset />
+      <WithTodoList loader={<span>Loading...</span>}>
+        {todoList => (
+          <AppWrapper>
+            <TodoListTitle>TODO list</TodoListTitle>
+            {todoList.map((todo, index) => (
+              <div key={index}>{todo}</div>
+            ))}
+            <RandomTodoButton onClick={addRandomTodo}>Add random</RandomTodoButton>
+          </AppWrapper>
+        )}
+      </WithTodoList>
+    </React.Fragment>
   );
 };
+
+const FAKE_LOAD_TIME = 2000;
+setTimeout(() => WithTodoList.setState([]), FAKE_LOAD_TIME);
 
 const AppWrapper = styled.div`
   display: flex;
