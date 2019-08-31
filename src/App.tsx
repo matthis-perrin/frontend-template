@@ -11,15 +11,12 @@ interface Product {
   name: string;
 }
 const WithProduct = ParamWizz(
-  (products: Product[] | undefined, props: {productId: string}) =>
-    products && products.filter(p => p.id === props.productId)[0]
+  (products: Product[], props: {productId: string}) =>
+    products.filter(p => p.id === props.productId)[0]
 );
 
 function addRandomTodo(): void {
-  let currentTodoList = WithTodoList.getState();
-  if (currentTodoList === undefined) {
-    currentTodoList = [];
-  }
+  const currentTodoList = WithTodoList.getState();
   WithTodoList.setState(
     currentTodoList.concat([
       `TODO #${Math.random()

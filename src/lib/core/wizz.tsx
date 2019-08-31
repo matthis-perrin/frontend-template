@@ -1,9 +1,9 @@
-import {throwStatement} from '@babel/types';
 import React from 'react';
 
 // tslint:disable-next-line:typedef
 export function ParamWizz<State, Props, DerivedStateFromProps>(
-  getDerivedState: (state: State | undefined, props: Props) => DerivedStateFromProps | undefined
+  getDerivedState: (state: State, props: Props) => DerivedStateFromProps,
+  initialState?: State
 ) {
   type WizzInternalProps = Props & {
     children(derivedState: DerivedStateFromProps): JSX.Element | JSX.Element[];
@@ -15,11 +15,11 @@ export function ParamWizz<State, Props, DerivedStateFromProps>(
   }
 
   class WizzInternal extends React.Component<WizzInternalProps, WizzInternalState> {
-    private static state: State | undefined;
-    private static readonly listeners: (() => void)[] = [];
+    //
+    // State
+    //
 
-    private elementWasMounted: boolean = false;
-    private shouldRecomputeOnMount: boolean = false;
+    private static state: State;
 
     public static setState(newState: State): void {
       WizzInternal.state = newState;
@@ -28,15 +28,24 @@ export function ParamWizz<State, Props, DerivedStateFromProps>(
       }
     }
 
-    public static getState(): State | undefined {
+    public static getState(): State {
       return WizzInternal.state;
     }
 
     public constructor(props: WizzInternalProps) {
       super(props);
-      this.state = {derivedState: getDerivedState(undefined, props)};
+      this.state = {derivedState: initialState && getDerivedState(initialState, props)};
       WizzInternal.listeners.push(this.recomputeState);
     }
+
+    //
+    // Lifecycle
+    //
+
+    private static readonly listeners: (() => void)[] = [];
+
+    private elementWasMounted: boolean = false;
+    private shouldRecomputeOnMount: boolean = false;
 
     public componentDidMount(): void {
       this.elementWasMounted = true;
@@ -90,5 +99,5 @@ export function ParamWizz<State, Props, DerivedStateFromProps>(
 
 // tslint:disable-next-line:typedef
 export function Wizz<State>(initialState?: State) {
-  return ParamWizz((state: State | undefined, props: {}) => state || initialState);
+  return ParamWizz((state: State, props: {}) => state, initialState);
 }
