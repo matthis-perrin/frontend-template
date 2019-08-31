@@ -69,8 +69,13 @@ export function ParamWizz<State, Props, DerivedStateFromProps>(
       prevProps: WizzInternalProps,
       prevState: WizzInternalState
     ): boolean {
-      // TODO - check if prevProps (beside children or loader) or prevState.derivedState have changed
-      return true;
+      const {children, loader} = this.props;
+      const {derivedState} = this.state;
+      return (
+        prevProps.children !== children ||
+        prevProps.loader !== loader ||
+        JSON.stringify(prevState.derivedState) !== JSON.stringify(derivedState)
+      );
     }
 
     private readonly recomputeState = (): void => {
